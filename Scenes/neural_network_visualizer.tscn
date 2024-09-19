@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dqu18vve8yc2j"]
+
+[ext_resource type="Script" path="res://Scripts/neural network/NeuralNetworkVisualizer.cs" id="1_8cfa0"]
+
+[node name="NeuralNetworkVisualizer" type="Node2D"]
+script = ExtResource("1_8cfa0")

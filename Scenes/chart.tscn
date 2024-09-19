@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bh0cg16co7cjj"]
+
+[ext_resource type="Script" path="res://Scripts/Chart/Chart.cs" id="1_3gcqo"]
+
+[node name="Chart" type="Node2D"]
+scale = Vector2(1e-05, 1e-05)
+script = ExtResource("1_3gcqo")

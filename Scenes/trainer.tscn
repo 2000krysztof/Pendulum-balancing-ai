@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://bymnlk562h0m7"]
+
+[ext_resource type="Script" path="res://Scripts/Trainer/Trainer.cs" id="1_d8ss0"]
+
+[node name="Trainer" type="Node2D" node_paths=PackedStringArray("timer")]
+script = ExtResource("1_d8ss0")
+timer = NodePath("Timer")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 6.573
+autostart = true

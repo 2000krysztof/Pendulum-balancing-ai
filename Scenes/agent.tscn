@@ -1,0 +1,62 @@
+[gd_scene load_steps=8 format=3 uid="uid://dxybeaqenjej1"]
+
+[ext_resource type="Script" path="res://Scripts/agent/Brain.cs" id="1_0njt4"]
+[ext_resource type="Script" path="res://Scripts/agent/Agent.cs" id="1_yu0vj"]
+[ext_resource type="Texture2D" uid="uid://bh8sd6gg58o0q" path="res://Images/PendulumTop.png" id="2_ikbi1"]
+[ext_resource type="Texture2D" uid="uid://cwmxulrjyw2av" path="res://Images/PendulumConnector.png" id="2_n6kcc"]
+[ext_resource type="Texture2D" uid="uid://d3cd7wlqc4b2y" path="res://Images/PendulumBase.png" id="4_asfhd"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_w8yvy"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bv6j8"]
+
+[node name="Agent" type="Node2D" node_paths=PackedStringArray("brain", "pendulumHead", "penulumBase")]
+script = ExtResource("1_yu0vj")
+brain = NodePath("Brain")
+pendulumHead = NodePath("Pendulum")
+penulumBase = NodePath("Base")
+margin = 10.0
+
+[node name="Brain" type="Node" parent="."]
+script = ExtResource("1_0njt4")
+speed = 300.0
+upperBound = 400.0
+lowerBound = -400.0
+connectionProbability = 0.09
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
+node_a = NodePath("../Base")
+node_b = NodePath("../Pendulum")
+
+[node name="Pendulum" type="RigidBody2D" parent="."]
+position = Vector2(0, -147)
+collision_mask = 0
+mass = 3.13
+gravity_scale = 2.153
+angular_velocity = 0.0523599
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pendulum"]
+shape = SubResource("CircleShape2D_w8yvy")
+
+[node name="Connector" type="Sprite2D" parent="Pendulum"]
+texture_filter = 1
+position = Vector2(1, 70)
+scale = Vector2(2.59375, 5.0625)
+texture = ExtResource("2_n6kcc")
+
+[node name="Top" type="Sprite2D" parent="Pendulum"]
+texture_filter = 1
+position = Vector2(0, -1)
+scale = Vector2(1.75, 1.75)
+texture = ExtResource("2_ikbi1")
+
+[node name="Base" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Base"]
+shape = SubResource("CircleShape2D_bv6j8")
+
+[node name="Icon" type="Sprite2D" parent="Base"]
+texture_filter = 1
+position = Vector2(0, -21)
+scale = Vector2(2.5, 2.5)
+texture = ExtResource("4_asfhd")

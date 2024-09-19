@@ -1,0 +1,113 @@
+[gd_scene load_steps=6 format=3 uid="uid://j3l2pajah0di"]
+
+[ext_resource type="PackedScene" uid="uid://dqu18vve8yc2j" path="res://Scenes/neural_network_visualizer.tscn" id="1_s1up5"]
+[ext_resource type="PackedScene" uid="uid://bymnlk562h0m7" path="res://Scenes/trainer.tscn" id="1_veoj3"]
+[ext_resource type="PackedScene" uid="uid://bh0cg16co7cjj" path="res://Scenes/chart.tscn" id="3_w6lmv"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_axjwp"]
+viewport_path = NodePath("Camera2D/Control/ColorRect/ChartViewPort/SubViewport")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_w0x4v"]
+viewport_path = NodePath("Camera2D/Control/ColorRect/SubViewportContainer/SubViewport")
+
+[node name="World" type="Node2D"]
+
+[node name="Trainer" parent="." node_paths=PackedStringArray("chart") instance=ExtResource("1_veoj3")]
+spawnPostion = Vector2(570, 250)
+batchSize = 100
+percentageToMutate = 0.7
+chart = NodePath("../Camera2D/Control/ColorRect/ChartViewPort/SubViewport/Chart")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(575, 320)
+
+[node name="Control" type="Control" parent="Camera2D"]
+layout_mode = 3
+anchors_preset = 0
+offset_left = -575.0
+offset_top = -320.0
+offset_right = 575.0
+offset_bottom = 322.0
+size_flags_horizontal = 4
+metadata/_edit_use_anchors_ = true
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/Control"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 476.0
+offset_bottom = -3.0
+color = Color(0.07714, 0.278744, 0.393142, 1)
+
+[node name="ColorRect" type="ColorRect" parent="Camera2D/Control/ColorRect"]
+layout_mode = 0
+offset_left = 109.0
+offset_top = 3.0
+offset_right = 392.0
+offset_bottom = 166.0
+color = Color(0.205117, 0.205117, 0.205117, 1)
+
+[node name="TextureRect2" type="TextureRect" parent="Camera2D/Control/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 768.0
+offset_top = 17.0
+offset_right = -222.0
+offset_bottom = -14.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ViewportTexture_axjwp")
+expand_mode = 1
+flip_v = true
+
+[node name="TextureRect" type="TextureRect" parent="Camera2D/Control/ColorRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 112.0
+offset_top = 3.0
+offset_right = -731.0
+offset_bottom = 116.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ViewportTexture_w0x4v")
+expand_mode = 1
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="Camera2D/Control/ColorRect"]
+layout_mode = 0
+offset_left = 1805.0
+offset_top = -420.0
+offset_right = 2317.0
+offset_bottom = 92.0
+size_flags_vertical = 4
+
+[node name="SubViewport" type="SubViewport" parent="Camera2D/Control/ColorRect/SubViewportContainer"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1080, 1080)
+render_target_update_mode = 4
+
+[node name="NeuralNetworkVisualizer" parent="Camera2D/Control/ColorRect/SubViewportContainer/SubViewport" instance=ExtResource("1_s1up5")]
+layerOffsetMuliplayer = 50.0
+nodeOffsetMultiplayer = 100.0
+
+[node name="ChartViewPort" type="SubViewportContainer" parent="Camera2D/Control/ColorRect"]
+layout_mode = 0
+offset_left = 1428.0
+offset_top = 113.0
+offset_right = 2170.0
+offset_bottom = 744.0
+
+[node name="SubViewport" type="SubViewport" parent="Camera2D/Control/ColorRect/ChartViewPort"]
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(1080, 1080)
+render_target_update_mode = 4
+
+[node name="Chart" parent="Camera2D/Control/ColorRect/ChartViewPort/SubViewport" instance=ExtResource("3_w6lmv")]
+scale = Vector2(1, 1)
+chartScale = 1000.0
