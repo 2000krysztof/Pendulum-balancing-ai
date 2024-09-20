@@ -12,7 +12,9 @@ public partial class NeuralNetworkVisualizer : Node2D
 
 	public override void _Ready()
 	{
-		Trainer.instance.OnSetBest += OnPickBest;
+	}
+	public void setTrainerInstance(Trainer trainer){
+		trainer.OnSetBest += OnPickBest;
 	}
 
 	void OnPickBest(Agent agent){

@@ -6,18 +6,31 @@ public partial class Trainer : Node
 	PackedScene agent = GD.Load<PackedScene>("res://Scenes/agent.tscn");
 	[Export] Timer timer;
 	[Export] Vector2 spawnPostion;
-	[Export] int batchSize = 10;
+	int batchSize = 10;
 	[Export(PropertyHint.Range, "0,1,0.01")] float percentageToMutate;
 	Agent[] agents;
 	int mutationCount, generation;
 
 	[Signal] public delegate void OnSetBestEventHandler(Agent agent);
 	[Export] Chart chart;
-
+	[Export] Label averageFitnessLabel;
+	[Export] Label averageFitnessOfBestLabel;
+	[Export] Label generationLabel;
+	[Export] Button startTrainingButton;
+	[Export] LineEdit batchSizeInputField;
+	[Export] HSlider mutationProbabilitySlider;
+	[Export] NeuralNetworkVisualizer visualizer;
 	public static Trainer instance;
+	
 	public override void _Ready()
 	{
+		startTrainingButton.Pressed += Run;
+	}
+	public void Run(){
+		batchSize = int.Parse(batchSizeInputField.Text);
+		percentageToMutate = (float)mutationProbabilitySlider.Value;
 		instance = this;
+		visualizer.setTrainerInstance(this);
 		generation = 0;
 		agents = new Agent[batchSize];
 		for(int i = 0; i < batchSize; i++){
@@ -28,14 +41,17 @@ public partial class Trainer : Node
 		}
 		timer.Timeout += OnTimeOut;
 		mutationCount = (int)(batchSize*percentageToMutate);
-
+		startTrainingButton.Visible =false;
 	}
 
 	void OnTimeOut(){
 		GD.Print($"Generation : {generation} | Average fitness : {AverageFitness()}");
+		generationLabel.Text = $"Generation: {generation}";
+		averageFitnessLabel.Text = $"Average Fitness : {AverageFitness()}"; 
 		generation ++;
 		SortAgentsByFitness();	
 		GD.Print($"Average Fitnees of Best: {AverageFitnessOfBest()}");
+		averageFitnessOfBestLabel.Text = $"Average Fitnees of Best: {AverageFitnessOfBest()}";
 		chart.Add(AverageFitnessOfBest());
 		MutateWorst();
 		ResetAgents();

@@ -1,81 +1,98 @@
-[gd_scene load_steps=6 format=3 uid="uid://j3l2pajah0di"]
+[gd_scene load_steps=8 format=3 uid="uid://j3l2pajah0di"]
 
 [ext_resource type="PackedScene" uid="uid://dqu18vve8yc2j" path="res://Scenes/neural_network_visualizer.tscn" id="1_s1up5"]
 [ext_resource type="PackedScene" uid="uid://bymnlk562h0m7" path="res://Scenes/trainer.tscn" id="1_veoj3"]
 [ext_resource type="PackedScene" uid="uid://bh0cg16co7cjj" path="res://Scenes/chart.tscn" id="3_w6lmv"]
-
-[sub_resource type="ViewportTexture" id="ViewportTexture_axjwp"]
-viewport_path = NodePath("Camera2D/Control/ColorRect/ChartViewPort/SubViewport")
+[ext_resource type="Script" path="res://Scripts/NumberLock.cs" id="4_dcq8d"]
+[ext_resource type="Script" path="res://Scripts/SliderUpdate.cs" id="5_6ba4f"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_w0x4v"]
 viewport_path = NodePath("Camera2D/Control/ColorRect/SubViewportContainer/SubViewport")
 
+[sub_resource type="ViewportTexture" id="ViewportTexture_axjwp"]
+viewport_path = NodePath("Camera2D/Control/ColorRect/ChartViewPort/SubViewport")
+
 [node name="World" type="Node2D"]
 
-[node name="Trainer" parent="." node_paths=PackedStringArray("chart") instance=ExtResource("1_veoj3")]
+[node name="Trainer" parent="." node_paths=PackedStringArray("chart", "averageFitnessLabel", "averageFitnessOfBestLabel", "generationLabel", "startTrainingButton", "batchSizeInputField", "mutationProbabilitySlider", "visualizer") instance=ExtResource("1_veoj3")]
 spawnPostion = Vector2(570, 250)
-batchSize = 100
 percentageToMutate = 0.7
 chart = NodePath("../Camera2D/Control/ColorRect/ChartViewPort/SubViewport/Chart")
+averageFitnessLabel = NodePath("../Camera2D/Control/ColorRect/Average Fitness")
+averageFitnessOfBestLabel = NodePath("../Camera2D/Control/ColorRect/Average Fitness of Best")
+generationLabel = NodePath("../Camera2D/Control/ColorRect/Generatn Label")
+startTrainingButton = NodePath("../Camera2D/Control/StartTriningButton")
+batchSizeInputField = NodePath("../Camera2D/Control/BatchSizeInputField")
+mutationProbabilitySlider = NodePath("../Camera2D/Control/HSlider")
+visualizer = NodePath("../Camera2D/Control/ColorRect/SubViewportContainer/SubViewport/NeuralNetworkVisualizer")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(575, 320)
 
 [node name="Control" type="Control" parent="Camera2D"]
+custom_minimum_size = Vector2(100, 0)
+layout_direction = 1
 layout_mode = 3
-anchors_preset = 0
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
 offset_left = -575.0
-offset_top = -320.0
-offset_right = 575.0
-offset_bottom = 322.0
-size_flags_horizontal = 4
+offset_top = -326.0
+offset_right = 576.0
+offset_bottom = 327.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_vertical = 8
 metadata/_edit_use_anchors_ = true
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/Control"]
 layout_mode = 1
-anchors_preset = -1
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 476.0
-offset_bottom = -3.0
+offset_left = -104.0
+offset_top = 463.0
+offset_right = 85.0
+offset_bottom = 17.0
+grow_horizontal = 2
+grow_vertical = 2
 color = Color(0.07714, 0.278744, 0.393142, 1)
 
 [node name="ColorRect" type="ColorRect" parent="Camera2D/Control/ColorRect"]
-layout_mode = 0
-offset_left = 109.0
-offset_top = 3.0
-offset_right = 392.0
-offset_bottom = 166.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.081
+anchor_top = 0.014
+anchor_right = 0.293
+anchor_bottom = 0.802
+offset_left = -5.54
+offset_top = -2.898
+offset_right = 12.38
+offset_bottom = 36.986
 color = Color(0.205117, 0.205117, 0.205117, 1)
 
-[node name="TextureRect2" type="TextureRect" parent="Camera2D/Control/ColorRect"]
+[node name="TextureRect" type="TextureRect" parent="Camera2D/Control/ColorRect/ColorRect"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 768.0
-offset_top = 17.0
-offset_right = -222.0
-offset_bottom = -14.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("ViewportTexture_axjwp")
-expand_mode = 1
-flip_v = true
-
-[node name="TextureRect" type="TextureRect" parent="Camera2D/Control/ColorRect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 112.0
-offset_top = 3.0
-offset_right = -731.0
-offset_bottom = 116.0
+offset_left = 12.0
+offset_top = 12.0
+offset_right = 61.0
+offset_bottom = 41.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("ViewportTexture_w0x4v")
 expand_mode = 1
+
+[node name="Label" type="Label" parent="Camera2D/Control/ColorRect/ColorRect/TextureRect"]
+layout_mode = 0
+offset_top = -35.0
+offset_right = 227.0
+offset_bottom = -5.0
+text = "Neural network of best agent"
 
 [node name="SubViewportContainer" type="SubViewportContainer" parent="Camera2D/Control/ColorRect"]
 layout_mode = 0
@@ -88,7 +105,7 @@ size_flags_vertical = 4
 [node name="SubViewport" type="SubViewport" parent="Camera2D/Control/ColorRect/SubViewportContainer"]
 transparent_bg = true
 handle_input_locally = false
-size = Vector2i(1080, 1080)
+size = Vector2i(1500, 1080)
 render_target_update_mode = 4
 
 [node name="NeuralNetworkVisualizer" parent="Camera2D/Control/ColorRect/SubViewportContainer/SubViewport" instance=ExtResource("1_s1up5")]
@@ -111,3 +128,128 @@ render_target_update_mode = 4
 [node name="Chart" parent="Camera2D/Control/ColorRect/ChartViewPort/SubViewport" instance=ExtResource("3_w6lmv")]
 scale = Vector2(1, 1)
 chartScale = 1000.0
+
+[node name="Generatn Label" type="Label" parent="Camera2D/Control/ColorRect"]
+layout_mode = 0
+offset_left = 412.0
+offset_top = 8.0
+offset_right = 518.0
+offset_bottom = 59.0
+text = "Generation: "
+
+[node name="Average Fitness" type="Label" parent="Camera2D/Control/ColorRect"]
+layout_mode = 0
+offset_left = 412.0
+offset_top = 48.0
+offset_right = 584.0
+offset_bottom = 99.0
+text = "Average Fitness:"
+
+[node name="Average Fitness of Best" type="Label" parent="Camera2D/Control/ColorRect"]
+layout_mode = 0
+offset_left = 412.0
+offset_top = 95.0
+offset_right = 606.0
+offset_bottom = 146.0
+text = "Average Fitness of Best:"
+
+[node name="ColorRect2" type="ColorRect" parent="Camera2D/Control/ColorRect"]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.081
+anchor_top = 0.014
+anchor_right = 0.293
+anchor_bottom = 0.802
+offset_left = 858.46
+offset_top = -2.898
+offset_right = 864.38
+offset_bottom = 36.986
+color = Color(0.205117, 0.205117, 0.205117, 1)
+
+[node name="TextureRect2" type="TextureRect" parent="Camera2D/Control/ColorRect/ColorRect2"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = 9.0
+offset_bottom = -11.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ViewportTexture_axjwp")
+expand_mode = 1
+flip_v = true
+
+[node name="Label" type="Label" parent="Camera2D/Control/ColorRect/ColorRect2"]
+layout_mode = 0
+offset_left = -1.0
+offset_top = -21.0
+offset_right = 285.0
+offset_bottom = 2.0
+text = "Graph of preformance of best agents"
+
+[node name="StartTriningButton" type="Button" parent="Camera2D/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = 17.0
+offset_right = -975.0
+offset_bottom = -595.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Start Training"
+
+[node name="BatchSizeInputField" type="LineEdit" parent="Camera2D/Control"]
+layout_mode = 0
+offset_left = 13.0
+offset_top = 73.0
+offset_right = 176.0
+offset_bottom = 104.0
+placeholder_text = "Batch size"
+text_direction = 1
+script = ExtResource("4_dcq8d")
+
+[node name="HSlider" type="HSlider" parent="Camera2D/Control" node_paths=PackedStringArray("valueLabel")]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 0.928
+offset_left = 13.0
+offset_top = 166.0
+offset_right = -952.0
+offset_bottom = -423.984
+max_value = 1.0
+step = 0.001
+value = 0.7
+script = ExtResource("5_6ba4f")
+valueLabel = NodePath("Label")
+
+[node name="Label" type="Label" parent="Camera2D/Control/HSlider"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.437
+offset_left = 3.0
+offset_top = 28.0
+offset_right = -140.0
+offset_bottom = 28.008
+text = "0.7"
+text_overrun_behavior = 1
+visible_characters = 5
+visible_ratio = 1.66667
+
+[node name="Label" type="Label" parent="Camera2D/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 124.0
+offset_right = -955.0
+offset_bottom = -506.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Percentage of agents to mutate"
+autowrap_mode = 2
